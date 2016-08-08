@@ -1,3 +1,4 @@
+import yaml
 from matplotlib import ticker
 
 __author__ = 'william'
@@ -15,7 +16,7 @@ ax = plt.axes()
 
 # fig.autofmt_xdate()
 
-def calc_ephem(object, aux_i):
+def calc_ephem(object, aux_i, tag=None):
     # Calculate altitudes for the night
     aux = []
     for dt in alt_dates:
@@ -23,6 +24,10 @@ def calc_ephem(object, aux_i):
         object.compute(observer)
         aux.append(object.alt * 57.2957795)
     ax.plot(alt_dates, aux, label=aux_i)
+    if tag is not None:
+        aux_arg = np.argmax(aux)
+        plt.plot(alt_dates[aux_arg], aux[aux_arg], '.', color='black')
+        plt.text(alt_dates[aux_arg], aux[aux_arg]+.5, tag)
     observer.date = (sunrise - sunset) / 2.
     if output_chimera:
         print "chimera-tel --slew --ra %s --dec %s && chimera-cam --object '%s' -t NN # mag = %s" % (
@@ -97,6 +102,24 @@ try:
             object._dec = ephem.degrees(dec)
             calc_ephem(object, d[0])
 except:  # ConfigParser.NoOptionError:
+    pass
+
+i_sched = 0
+try:
+    with open(c.get("ephemeris", "chimera-sched_file")) as f:
+        data = yaml.load(f)
+    for prog in data['programs']:
+        for action in prog['actions']:
+            if action['action'] == 'point':
+                if 'ra' in action:
+                    object = ephem.FixedBody()
+                    object._ra = ephem.hours(action['ra'])
+                    object._dec = ephem.degrees(action['dec'])
+                    calc_ephem(object, 'scheduler_%i' % i_sched, tag='%s' % (i_sched+1))
+                else:
+                    print 'Skipping %i. This script does not support name searches yet.'
+                i_sched += 1
+except ConfigParser.NoOptionError:
     pass
 
 for id_object in sys.argv[1:]:

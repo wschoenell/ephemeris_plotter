@@ -1,0 +1,165 @@
+programs:
+
+  - name: PROG01
+    pi: Elvis
+    priority: 1         # (optional)
+    actions:
+  
+  
+     - action: point
+       ra: "14:59:22.600"
+       dec: "+02:18:16.00"
+       epoch: J2000
+     - action: autofocus
+       step: 0
+     - action: expose
+       filter: U
+       frames: 3
+       exptime: 207
+       imageType: OBJECT
+       objectName: "HE1456+0230"
+     - action: expose
+       filter: G
+       frames: 12
+       exptime: 13
+       imageType: OBJECT
+       objectName: "HE1456+0230"
+     - action: expose
+       filter: R
+       frames: 12
+       exptime: 20
+       imageType: OBJECT
+       objectName: "HE1456+0230"
+     - action: expose
+       filter: I
+       frames: 3
+       exptime: 26
+       imageType: OBJECT
+       objectName: "HE1456+0230"
+     - action: expose
+       filter: Z
+       frames: 3
+       exptime: 36
+       imageType: OBJECT
+       objectName: "HE1456+0230"
+     - action: expose
+       filter: F378
+       frames: 3
+       exptime: 64
+       imageType: OBJECT
+       objectName: "HE1456+0230"
+     - action: expose
+       filter: F395
+       frames: 3
+       exptime: 98
+       imageType: OBJECT
+       objectName: "HE1456+0230"
+     - action: expose
+       filter: F410
+       frames: 3
+       exptime: 39
+       imageType: OBJECT
+       objectName: "HE1456+0230"
+     - action: expose
+       filter: F430
+       frames: 3
+       exptime: 37
+       imageType: OBJECT
+       objectName: "HE1456+0230"
+     - action: expose
+       filter: F515
+       frames: 3
+       exptime: 41
+       imageType: OBJECT
+       objectName: "HE1456+0230"
+     - action: expose
+       filter: F660
+       frames: 3
+       exptime: 270
+       imageType: OBJECT
+       objectName: "HE1456+0230"
+     - action: expose
+       filter: F861
+       frames: 3
+       exptime: 60
+       imageType: OBJECT
+       objectName: "HE1456+0230"
+       
+     - action: point
+       ra: "19:35:28.460"
+       dec: "-46:21:29.60"
+       epoch: J2000
+     - action: autofocus
+       step: 0
+     - action: expose
+       filter: U
+       frames: 3
+       exptime: 207
+       imageType: OBJECT
+       objectName: "SMSSJ1935-4621"
+     - action: expose
+       filter: G
+       frames: 12
+       exptime: 13
+       imageType: OBJECT
+       objectName: "SMSSJ1935-4621"
+     - action: expose
+       filter: R
+       frames: 12
+       exptime: 20
+       imageType: OBJECT
+       objectName: "SMSSJ1935-4621"
+     - action: expose
+       filter: I
+       frames: 3
+       exptime: 26
+       imageType: OBJECT
+       objectName: "SMSSJ1935-4621"
+     - action: expose
+       filter: Z
+       frames: 3
+       exptime: 36
+       imageType: OBJECT
+       objectName: "SMSSJ1935-4621"
+     - action: expose
+       filter: F378
+       frames: 3
+       exptime: 64
+       imageType: OBJECT
+       objectName: "SMSSJ1935-4621"
+     - action: expose
+       filter: F395
+       frames: 3
+       exptime: 98
+       imageType: OBJECT
+       objectName: "SMSSJ1935-4621"
+     - action: expose
+       filter: F410
+       frames: 3
+       exptime: 39
+       imageType: OBJECT
+       objectName: "SMSSJ1935-4621"
+     - action: expose
+       filter: F430
+       frames: 3
+       exptime: 37
+       imageType: OBJECT
+       objectName: "SMSSJ1935-4621"
+     - action: expose
+       filter: F515
+       frames: 3
+       exptime: 41
+       imageType: OBJECT
+       objectName: "SMSSJ1935-4621"
+     - action: expose
+       filter: F660
+       frames: 3
+       exptime: 270
+       imageType: OBJECT
+       objectName: "SMSSJ1935-4621"
+     - action: expose
+       filter: F861
+       frames: 3
+       exptime: 60
+       imageType: OBJECT
+       objectName: "SMSSJ1935-4621"
