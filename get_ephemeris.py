@@ -32,18 +32,19 @@ def calc_ephem(object, aux_i, tag=None, duration=None, start=None):
         aux.append(object.alt * 57.2957795)
     ax.plot(alt_dates, aux, label=aux_i)
     if duration is not None:
-        print 'Duration: %3.2f' % duration
         if start is not None:
-            print 'start at %f' % start
             # 1.1574074074074073e-05 = 1. day /24 hours /3600. secs
             t = np.linspace(t0, t0 + duration * 1.1574074074074073e-05, 20)
-            aux2 = []
-            for dt in t:
+            aux2 = np.zeros_like(t)
+            for i,dt in enumerate(t):
                 observer.date = dt
                 object.compute(observer)
-                aux.append(object.alt * 57.2957795)
+                aux2[i] = object.alt * 57.2957795
             # observer.date = (sunrise - sunset) / 2.
-            plt.fill_between(t, aux2, color='black', alpha=.3)  # , color='black')
+            ylim = plt.ylim()
+
+            plt.fill_between(t, aux2, ylim[0], color='black', alpha=.3)  # , color='black')
+            plt.ylim(ylim)
     if tag is not None:
         if start is None:
             aux_arg = np.argmax(aux)
@@ -134,19 +135,18 @@ try:
     with open(c.get("ephemeris", "chimera-sched_file")) as f:
         data = yaml.load(f)
     for prog in data['programs']:
-        if 'slewAt' in prog:
-            x = ephem.Date(Time(float(prog['slewAt']), format='mjd').datetime)
-            t0 = x if x > sunset else None
-            print x, t0, sunset
-        else:
-            t0 = None
+
         for action in prog['actions']:
+
             if action['action'] == 'point':
+
                 if object is not None:
-                    if t0 is not None:
-                        t0 += t * 1.1574074074074073e-05
                     calc_ephem(object, 'scheduler_%i' % i_sched, tag='%s' % (i_sched + 1), duration=t, start=t0)
-                t = 0
+                    plot = True
+                    if t0 is not None:
+                        t0 += (t * 1.1574074074074073e-05)
+                    t = 0
+
                 if 'ra' in action:
                     object = ephem.FixedBody()
                     object._ra = ephem.hours(action['ra'])
@@ -158,9 +158,9 @@ try:
                         print 'Skipping %i. This script does not support name searches yet.' % i_sched
                 i_sched += 1
             elif action['action'] == 'expose':
-                t += action['exptime']
+                t += action['exptime']*action['frames']
                 try:
-                    t += float(c.get("telescope_times", "exposure_overhead"))
+                    t += float(c.get("telescope_times", "exposure_overhead"))*action['frames']
                     t += float(c.get("telescope_times", "point_overhead"))
                 except:
                     pass
@@ -172,6 +172,13 @@ try:
                         t += float(c.get("telescope_times", "autofocus_model"))
                 except:
                     pass
+        if 'slewAt' in prog:
+            x = ephem.Date(Time(float(prog['slewAt']), format='mjd').datetime)
+            t0 = x if x > sunset else None
+
+        # if not plot:
+        #     calc_ephem(object, 'scheduler_%i' % i_sched, tag='%s' % (i_sched + 1), duration=t, start=t0)
+        #     t0 += (t * 1.1574074074074073e-05)
 except ConfigParser.NoOptionError:
     pass
 
@@ -186,7 +193,7 @@ for id_object in sys.argv[1:]:
 
 ax.xaxis.set_major_formatter(ticker.FuncFormatter(format_date))
 
-ax.legend(loc='upper center', ncol=5, fancybox=True, framealpha=0.5)
+# ax.legend(loc='upper center', ncol=5, fancybox=True, framealpha=0.5)
 ylim = ax.get_ylim()
 ax.set_ylim(0, 110)
 ax.set_xlim(sunset, sunrise)
